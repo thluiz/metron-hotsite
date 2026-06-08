@@ -22,6 +22,10 @@ jobs:
           retention-days: 1
 
   aws-deploy:
+    # Desativado: site agora servido só pela Cloudflare Pages
+    # (metron.hybris.world). Bucket + distribution continuam de pé;
+    # remova o `if: false` para reativar.
+    if: false
     needs: build
     runs-on: ubuntu-latest
     permissions:
