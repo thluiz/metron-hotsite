@@ -4,70 +4,74 @@ import '../styles/global.css';
 ---
 <Layout title="Metron Showrunners">
 
-  <section id="cover" class="slide flex flex-col items-center justify-center">
+  <div class="metron-composition">
+    <img src="/images/metron-logo.png" alt="Metron Showrunners" class="metron-mark" />
+    <span class="metron-bar"></span>
+  </div>
 
-    <div class="metron-mark">
-      <span class="metron-word">METRON</span>
-      <span class="metron-sep"></span>
-      <span class="metron-sub">SHOWRUNNERS</span>
-    </div>
-
-    <p class="cover-credit">
-      Exclusive Owner of the
-      <span class="hybris-inline">HYBRI<em>s</em></span>
-      Franchise Intellectual Property
-    </p>
-
-  </section>
+  <section id="cover" class="slide"></section>
+  <section id="cover-end" class="slide"></section>
 
 </Layout>
 
 <style>
+  .metron-composition {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) translateX(-3rem);
+    z-index: 10;
+    display: flex;
+    align-items: flex-start;
+    gap: 1.5rem;
+    pointer-events: none;
+  }
   .metron-mark {
-    display: grid;
-    grid-template-columns: auto 1px auto;
-    align-items: center;
-    column-gap: 0.85rem;
-    color: #d8d8e0;
-    letter-spacing: 0.04em;
+    width: clamp(142px, 18.14vw, 272px);
+    height: auto;
+    display: block;
   }
-  .metron-word {
-    font-family: 'Cinzel', serif;
-    font-weight: 500;
-    font-size: clamp(1.4rem, 2.6vw, 2.2rem);
-    letter-spacing: 0.08em;
-  }
-  .metron-sep {
+  .metron-bar {
+    position: relative;
     align-self: stretch;
-    background: rgba(216, 216, 224, 0.55);
     width: 1px;
+    background: rgba(216, 216, 224, 0.55);
   }
-  .metron-sub {
-    font-family: 'Cinzel', serif;
-    font-weight: 400;
-    font-size: clamp(0.6rem, 0.9vw, 0.75rem);
-    letter-spacing: 0.32em;
-    align-self: end;
-    padding-bottom: 2px;
+  .metron-bar::before {
+    content: '';
+    position: absolute;
+    bottom: 100%;
+    left: 0;
+    width: 1px;
+    height: var(--bar-rise, 0px);
+    background: rgba(216, 216, 224, 0.55);
+  }
+  .metron-bar::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 1px;
+    height: 50vh;
+    background: rgba(216, 216, 224, 0.55);
   }
 
-  .cover-credit {
-    position: absolute;
-    bottom: 2.5rem;
-    left: 50%;
-    transform: translateX(-50%);
-    font-family: 'Cinzel', serif;
-    font-size: clamp(0.75rem, 1vw, 0.9rem);
-    letter-spacing: 0.06em;
-    color: rgba(232, 232, 239, 0.85);
-    white-space: nowrap;
-  }
-  .hybris-inline {
-    margin: 0 0.25em;
-    letter-spacing: 0.08em;
-  }
-  .hybris-inline em {
-    font-style: italic;
-    letter-spacing: 0;
+  :global(#cover),
+  :global(#cover-end) {
+    background-attachment: fixed;
+    box-shadow: none;
   }
 </style>
+
+<script>
+  const setBarRise = () => {
+    const scrollY = window.scrollY;
+    const vh = window.innerHeight;
+    const max = vh * 0.55;
+    const progress = Math.min(1, scrollY / vh);
+    document.documentElement.style.setProperty('--bar-rise', `${progress * max}px`);
+  };
+  window.addEventListener('scroll', setBarRise, { passive: true });
+  window.addEventListener('resize', setBarRise);
+  setBarRise();
+</script>
