@@ -19,16 +19,15 @@ body {
   background-color: #050a1c;
 }
 
-/* ── Full-screen section slides ───────────────────── */
-.slide {
-  scroll-snap-align: start;
-  height: 100vh;
-  overflow: hidden;
-  position: relative;
-  /* Layered background:
-     1) top-center radial glow (the "spotlight")
-     2) center-to-edges radial darkening (vignette)
-     3) solid base color (fallback / very dark navy) */
+/* Fixed background layer (gradient + vignette). Lives behind all content
+   so it stays stationary while slides scroll — including on iOS Safari,
+   which ignores `background-attachment: fixed`. */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  pointer-events: none;
   background:
     radial-gradient(ellipse 55% 40% at 50% 0%,
       rgba(120, 150, 210, 0.45) 0%,
@@ -39,21 +38,28 @@ body {
       #0a1232 55%,
       #050a1c 100%),
     #050a1c;
-  /* Inner shadow tightens the corners — extra vignette */
   box-shadow: inset 0 0 260px rgba(0, 0, 0, 0.55);
 }
 
-/* Grain texture overlay */
-.slide::before {
+/* Fixed grain overlay sitting on top of the gradient layer */
+body::after {
   content: '';
-  position: absolute;
+  position: fixed;
   inset: 0;
+  z-index: -1;
   pointer-events: none;
-  z-index: 1;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.68' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
   background-size: 300px 300px;
   opacity: 0.12;
   mix-blend-mode: overlay;
+}
+
+/* ── Full-screen section slides ───────────────────── */
+.slide {
+  scroll-snap-align: start;
+  height: 100vh;
+  overflow: hidden;
+  position: relative;
 }
 
 /* Raise all direct slide children above grain */
