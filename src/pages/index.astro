@@ -7,11 +7,12 @@ import '../styles/global.css';
   <div class="metron-composition">
     <img src="/images/metron-logo.png" alt="Metron Showrunners" class="metron-mark" />
     <span class="metron-bar"></span>
-    <div class="right-stage">
-      <img src="/images/hybris-logo.png" alt="Hybris" class="right-logo" data-slide="1" />
-      <img src="/images/laya-logo.png" alt="Laya" class="right-logo" data-slide="2" />
-      <img src="/images/intersessoes-logo.png" alt="Intersessões" class="right-logo" data-slide="3" />
-    </div>
+  </div>
+
+  <div class="ip-stage">
+    <img src="/images/hybris-logo.png" alt="Hybris" class="ip-logo" data-slide="1" />
+    <img src="/images/laya-logo.png" alt="Laya" class="ip-logo" data-slide="2" />
+    <img src="/images/intersessoes-logo.png" alt="Intersessões" class="ip-logo" data-slide="3" />
   </div>
 
   <section id="cover" class="slide"></section>
@@ -24,12 +25,12 @@ import '../styles/global.css';
 <style>
   .metron-composition {
     position: fixed;
-    top: 50%;
+    top: 22vh;
     left: 50%;
-    transform: translate(-50%, -50%);
+    transform: translateX(-50%);
     z-index: 10;
     display: flex;
-    align-items: center;
+    align-items: stretch;
     gap: 1.5rem;
     pointer-events: none;
   }
@@ -37,50 +38,34 @@ import '../styles/global.css';
     width: clamp(142px, 18.14vw, 272px);
     height: auto;
     display: block;
-  }
-  .metron-bar {
-    position: relative;
-    align-self: stretch;
-    width: 1px;
-    background: rgba(216, 216, 224, 0.55);
-  }
-  .metron-bar::before {
-    content: '';
-    position: absolute;
-    bottom: 100%;
-    left: 0;
-    width: 1px;
-    height: var(--bar-rise, 0px);
-    background: rgba(216, 216, 224, 0.55);
-  }
-  .metron-bar::after {
-    content: '';
-    position: absolute;
-    top: 100%;
-    left: 0;
-    width: 1px;
-    height: 50vh;
-    background: rgba(216, 216, 224, 0.55);
-  }
-  .right-stage {
-    position: relative;
-    width: clamp(180px, 24vw, 360px);
-    height: clamp(90px, 12vw, 180px);
     align-self: center;
   }
-  .right-logo {
+  .metron-bar {
+    width: 1px;
+    height: clamp(220px, 42vh, 480px);
+    background: rgba(216, 216, 224, 0.55);
+  }
+
+  .ip-stage {
+    position: fixed;
+    left: calc(50% + (clamp(142px, 18.14vw, 272px) + 1.5rem) / 2);
+    bottom: 8vh;
+    transform: translateX(-50%);
+    width: clamp(220px, 28vw, 420px);
+    height: clamp(100px, 14vw, 200px);
+    z-index: 10;
+    pointer-events: none;
+  }
+  .ip-logo {
     position: absolute;
-    top: 50%;
-    left: 0;
-    transform: translateY(-50%);
+    inset: 0;
     width: 100%;
     height: 100%;
     object-fit: contain;
-    object-position: left center;
     opacity: 0;
-    transition: opacity 0.7s ease;
+    transition: opacity 0.6s ease;
   }
-  .right-logo.active {
+  .ip-logo.active {
     opacity: 1;
   }
 
@@ -95,18 +80,10 @@ import '../styles/global.css';
 
 <script>
   const slides = document.querySelectorAll('.slide');
-  const rightLogos = document.querySelectorAll('.right-logo');
+  const ipLogos = document.querySelectorAll('.ip-logo');
 
   const tick = () => {
-    const scrollY = window.scrollY;
     const vh = window.innerHeight;
-
-    // Bar growth: fully grown by the time we reach slide index 1
-    const max = vh * 0.55;
-    const progress = Math.min(1, scrollY / vh);
-    document.documentElement.style.setProperty('--bar-rise', `${progress * max}px`);
-
-    // Active right-side logo based on which slide is closest to viewport center
     const vcenter = vh / 2;
     let bestIdx = -1;
     let bestDist = Infinity;
@@ -119,7 +96,7 @@ import '../styles/global.css';
         bestIdx = i;
       }
     });
-    rightLogos.forEach((logo, i) => {
+    ipLogos.forEach((logo, i) => {
       logo.classList.toggle('active', i === bestIdx - 1);
     });
   };
