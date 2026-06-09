@@ -27,7 +27,8 @@ import '../styles/global.css';
     position: fixed;
     top: 22vh;
     left: 50%;
-    transform: translateX(-50%);
+    /* Shift composition so the bar (right edge) sits on the viewport center */
+    transform: translateX(calc(-100% + 0.5px));
     z-index: 10;
     display: flex;
     align-items: stretch;
@@ -38,17 +39,18 @@ import '../styles/global.css';
     width: clamp(142px, 18.14vw, 272px);
     height: auto;
     display: block;
-    align-self: center;
+    align-self: flex-start;
   }
   .metron-bar {
     width: 1px;
-    height: clamp(220px, 42vh, 480px);
+    /* Reaches from composition top down to just above the IP stage */
+    height: calc(70vh - clamp(100px, 14vw, 200px));
     background: rgba(216, 216, 224, 0.55);
   }
 
   .ip-stage {
     position: fixed;
-    left: calc(50% + (clamp(142px, 18.14vw, 272px) + 1.5rem) / 2);
+    left: 50%;
     bottom: 8vh;
     transform: translateX(-50%);
     width: clamp(220px, 28vw, 420px);
