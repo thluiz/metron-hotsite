@@ -7,10 +7,17 @@ import '../styles/global.css';
   <div class="metron-composition">
     <img src="/images/metron-logo.png" alt="Metron Showrunners" class="metron-mark" />
     <span class="metron-bar"></span>
+    <div class="right-stage">
+      <img src="/images/hybris-logo.png" alt="Hybris" class="right-logo" data-slide="1" />
+      <img src="/images/laya-logo.png" alt="Laya" class="right-logo" data-slide="2" />
+      <img src="/images/intersessoes-logo.png" alt="Intersessões" class="right-logo" data-slide="3" />
+    </div>
   </div>
 
   <section id="cover" class="slide"></section>
-  <section id="cover-end" class="slide"></section>
+  <section id="slide-hybris" class="slide"></section>
+  <section id="slide-laya" class="slide"></section>
+  <section id="slide-intersessoes" class="slide"></section>
 
 </Layout>
 
@@ -19,10 +26,10 @@ import '../styles/global.css';
     position: fixed;
     top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%) translateX(-3rem);
+    transform: translate(-50%, -50%);
     z-index: 10;
     display: flex;
-    align-items: flex-start;
+    align-items: center;
     gap: 1.5rem;
     pointer-events: none;
   }
@@ -55,23 +62,69 @@ import '../styles/global.css';
     height: 50vh;
     background: rgba(216, 216, 224, 0.55);
   }
+  .right-stage {
+    position: relative;
+    width: clamp(180px, 24vw, 360px);
+    height: clamp(90px, 12vw, 180px);
+    align-self: center;
+  }
+  .right-logo {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    transform: translateY(-50%);
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: left center;
+    opacity: 0;
+    transition: opacity 0.7s ease;
+  }
+  .right-logo.active {
+    opacity: 1;
+  }
 
   :global(#cover),
-  :global(#cover-end) {
+  :global(#slide-hybris),
+  :global(#slide-laya),
+  :global(#slide-intersessoes) {
     background-attachment: fixed;
     box-shadow: none;
   }
 </style>
 
 <script>
-  const setBarRise = () => {
+  const slides = document.querySelectorAll('.slide');
+  const rightLogos = document.querySelectorAll('.right-logo');
+
+  const tick = () => {
     const scrollY = window.scrollY;
     const vh = window.innerHeight;
+
+    // Bar growth: fully grown by the time we reach slide index 1
     const max = vh * 0.55;
     const progress = Math.min(1, scrollY / vh);
     document.documentElement.style.setProperty('--bar-rise', `${progress * max}px`);
+
+    // Active right-side logo based on which slide is closest to viewport center
+    const vcenter = vh / 2;
+    let bestIdx = -1;
+    let bestDist = Infinity;
+    slides.forEach((slide, i) => {
+      const rect = (slide as HTMLElement).getBoundingClientRect();
+      const center = rect.top + rect.height / 2;
+      const dist = Math.abs(center - vcenter);
+      if (dist < bestDist) {
+        bestDist = dist;
+        bestIdx = i;
+      }
+    });
+    rightLogos.forEach((logo, i) => {
+      logo.classList.toggle('active', i === bestIdx - 1);
+    });
   };
-  window.addEventListener('scroll', setBarRise, { passive: true });
-  window.addEventListener('resize', setBarRise);
-  setBarRise();
+
+  window.addEventListener('scroll', tick, { passive: true });
+  window.addEventListener('resize', tick);
+  tick();
 </script>
