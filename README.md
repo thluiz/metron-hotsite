@@ -3,9 +3,17 @@
 Hotsite estático da Metron Showrunners, publicado em
 [`metron.hybris.world`](https://metron.hybris.world) via Cloudflare Pages.
 
-A página única exibe a logo Metron + barra vertical centrada no viewport,
-com as logos das IPs (Hybris, Laya, Intersessões) fazendo crossfade à direita
-conforme o usuário rola.
+A página única exibe a logo Metron centrada no viewport ao lado das logos
+das IPs (Hybris, Laya, Intersessões), que fazem crossfade conforme o usuário
+navega entre os slides.
+
+### Navegação
+
+- Scroll vertical (mouse, trackpad, touch): muda de slide via `scroll-snap`.
+- Scroll lateral (`wheel.deltaX`): avança/retrocede slide.
+- Teclado: `Space`, `→`, `↓` avançam; `←`, `↑` retrocedem.
+- Navegação faz loop — do último slide volta ao primeiro e vice-versa.
+- Dots fixos no rodapé linkam direto para cada slide.
 
 ## Stack
 
@@ -27,12 +35,15 @@ npm run preview # serve dist/ localmente
 
 ```
 src/
-  layouts/   Layout.astro — html + head + scroll observers (crossfade + nav dots)
-  pages/     index.astro — composição Metron|bar|IP + slides + nav dots
+  layouts/   Layout.astro — html + head
+  pages/     index.astro — composição Metron+IP + slides + nav dots + input handlers
   styles/    global.css — background fixo (gradiente + grain), slides, nav dots
 public/
   images/    metron-logo.png + {hybris,laya,intersessoes}-logo.png
   favicon.svg
+tests/
+  seed.spec.ts — Playwright seed para iteração visual com MCP
+playwright.config.ts — projetos iPhone 12 / SE / 14 Pro Max
 ```
 
 ## Deploy

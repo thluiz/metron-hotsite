@@ -6,7 +6,6 @@ import '../styles/global.css';
 
   <div class="composition">
     <img src="/images/metron-logo.png" alt="Metron Showrunners" class="metron-mark" />
-    <span class="metron-bar"></span>
     <div class="ip-stage">
       <img src="/images/hybris-logo.png" alt="Hybris" class="ip-logo ip-logo--hybris" />
       <img src="/images/laya-logo.png" alt="Laya" class="ip-logo" />
@@ -39,20 +38,15 @@ import '../styles/global.css';
     pointer-events: none;
   }
   .metron-mark {
-    width: clamp(142px, 18.14vw, 272px);
+    width: clamp(108px, 18.14vw, 272px);
     height: auto;
     display: block;
-  }
-  .metron-bar {
-    width: 1px;
-    height: clamp(80px, 11vw, 160px);
-    background: rgba(216, 216, 224, 0.55);
   }
 
   .ip-stage {
     position: relative;
-    width: clamp(160px, 20vw, 300px);
-    height: clamp(80px, 11vw, 160px);
+    width: clamp(122px, 20vw, 300px);
+    height: clamp(62px, 11vw, 160px);
   }
   .ip-logo {
     position: absolute;
@@ -71,11 +65,48 @@ import '../styles/global.css';
     transform: scale(1.35);
     transform-origin: left center;
   }
+
+  @media (max-width: 640px) {
+    .composition {
+      /* Composition becomes a transparent anchor: items are positioned
+         absolutely relative to viewport center, guaranteeing they share
+         the same horizontal baseline regardless of size. */
+      top: 50%;
+      left: 0;
+      right: 0;
+      transform: translateY(-50%);
+      display: block;
+    }
+    .metron-mark {
+      position: absolute;
+      right: calc(50% + 4px);
+      top: 0;
+      transform: translateY(-50%);
+      width: clamp(135px, 38vw, 272px);
+    }
+    .ip-stage {
+      position: absolute;
+      left: calc(50% + 12px);
+      top: 0;
+      transform: translateY(-50%);
+      width: clamp(145px, 42vw, 260px);
+      height: auto;
+      aspect-ratio: 1.7 / 1;
+    }
+    .ip-logo {
+      object-position: left center;
+    }
+    .ip-logo--hybris {
+      transform: scale(1.35);
+      transform-origin: left center;
+    }
+  }
 </style>
 
 <script>
   const slides = document.querySelectorAll('.slide');
   const ipLogos = document.querySelectorAll('.ip-logo');
+  let currentIdx = 0;
 
   const tick = () => {
     const vh = window.innerHeight;
@@ -91,10 +122,42 @@ import '../styles/global.css';
         bestIdx = i;
       }
     });
+    currentIdx = bestIdx;
     ipLogos.forEach((logo, i) => {
       logo.classList.toggle('active', i === bestIdx);
     });
   };
+
+  let navLock = false;
+  const navigate = (dir: number) => {
+    if (navLock) return;
+    const n = slides.length;
+    const target = ((currentIdx + dir) % n + n) % n;
+    navLock = true;
+    setTimeout(() => { navLock = false; }, 650);
+    (slides[target] as HTMLElement).scrollIntoView({ behavior: 'smooth' });
+  };
+
+  // Horizontal wheel / trackpad → slide navigation
+  window.addEventListener('wheel', (e) => {
+    if (Math.abs(e.deltaX) > Math.abs(e.deltaY) && Math.abs(e.deltaX) > 10) {
+      e.preventDefault();
+      navigate(e.deltaX > 0 ? 1 : -1);
+    }
+  }, { passive: false });
+
+  // Keyboard shortcuts
+  window.addEventListener('keydown', (e) => {
+    const t = e.target as HTMLElement | null;
+    if (t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.isContentEditable)) return;
+    if (e.code === 'Space' || e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+      e.preventDefault();
+      navigate(1);
+    } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+      e.preventDefault();
+      navigate(-1);
+    }
+  });
 
   window.addEventListener('scroll', tick, { passive: true });
   window.addEventListener('resize', tick);
