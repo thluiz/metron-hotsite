@@ -1,72 +1,47 @@
 # metron-hotsite
 
-Static hotsite da Metron Showrunners, publicado em
-[`metron-hotsite.thluiz.com`](https://metron-hotsite.thluiz.com).
+Hotsite estático da Metron Showrunners, publicado em
+[`metron.hybris.world`](https://metron.hybris.world) via Cloudflare Pages.
+
+A página única exibe a logo Metron + barra vertical centrada no viewport,
+com as logos das IPs (Hybris, Laya, Intersessões) fazendo crossfade à direita
+conforme o usuário rola.
 
 ## Stack
 
 - [Astro](https://astro.build/) 4 (output estático)
 - Tailwind CSS 3 (`@astrojs/tailwind`)
-- Cinzel + Cinzel Decorative (OFL, self-hosted em `public/fonts/`)
-- Hospedagem: S3 + CloudFront (us-east-1)
+- Tipografia do sistema (sem fontes customizadas em uso)
+- Hospedagem: Cloudflare Pages (projeto `metron-hotsite`)
 
 ## Comandos
 
 ```bash
-npm install        # primeira vez
-npm run dev        # dev server (Astro)
-npm run build      # gera dist/
-npm run preview    # serve dist/ localmente
+npm install     # primeira vez
+npm run dev     # dev server (Astro)
+npm run build   # gera dist/
+npm run preview # serve dist/ localmente
 ```
 
 ## Estrutura
 
 ```
 src/
-  components/   componentes Astro reutilizáveis (Lightning, Polaroid, SlideHeader)
-  layouts/      Layout.astro — html + head + scroll observer
-  pages/        index.astro — página única (cover)
-  styles/       global.css — @font-face, slides, vinheta/grain
+  layouts/   Layout.astro — html + head + scroll observers (crossfade + nav dots)
+  pages/     index.astro — composição Metron|bar|IP + slides + nav dots
+  styles/    global.css — background fixo (gradiente + grain), slides, nav dots
 public/
-  fonts/        Cinzel*.otf + OFL.txt
+  images/    metron-logo.png + {hybris,laya,intersessoes}-logo.png
   favicon.svg
 ```
 
 ## Deploy
 
-Os deploys vão para o bucket `s3://metron-hotsite-thluiz-com/` e invalidam a
-distribuição CloudFront `E3DJ3AFXNDSS29`.
+Push em `main` dispara `.github/workflows/deploy.yml`, que faz build do Astro
+e publica em Cloudflare Pages via `wrangler-action`. Secrets necessários no
+repo: `CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID`.
 
-### Manual (Windows / pwsh)
-
-```powershell
-./deploy.ps1            # build + sync + invalidate
-./deploy.ps1 -BuildOnly # apenas build
-```
-
-Requer perfil AWS `scholion-admin` configurado localmente.
-
-### CI (GitHub Actions)
-
-`.github/workflows/deploy.yml` faz build + sync + invalidate em todo push para
-`main`. Requer secrets `AWS_ACCESS_KEY_ID` e `AWS_SECRET_ACCESS_KEY` no repo.
-
-## Infra
-
-| Recurso             | ID / Valor                                         |
-| ------------------- | -------------------------------------------------- |
-| S3 bucket           | `metron-hotsite-thluiz-com` (us-east-1, PAB ON)    |
-| CloudFront dist     | `E3DJ3AFXNDSS29`                                   |
-| CloudFront domain   | `d3piirez52lsxv.cloudfront.net`                    |
-| Alias               | `metron-hotsite.thluiz.com`                        |
-| Cert (ACM us-east-1)| wildcard `*.thluiz.com`                            |
-| Origin Access       | OAC `E3BSA34VHJSKOR` (compartilhado com hybris)    |
-
-Bucket é privado; só CloudFront lê via OAC, com bucket policy travada em
-`AWS:SourceArn` da distribuição.
-
-## Fontes
-
-Cinzel e Cinzel Decorative (Natanael Gama, [SIL OFL 1.1](public/fonts/OFL.txt))
-são servidas localmente de `public/fonts/`, carregadas via `@font-face` em
-`src/styles/global.css` e preloaded no `<head>` do Layout.
+O workflow também tem um job AWS (S3 + CloudFront `E3DJ3AFXNDSS29` →
+`metron-hotsite.thluiz.com`) desativado com `if: false`. Para reativar,
+remover essa linha — secrets `AWS_ACCESS_KEY_ID` e `AWS_SECRET_ACCESS_KEY`
+já estão no repo.
