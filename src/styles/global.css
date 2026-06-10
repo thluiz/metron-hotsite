@@ -28,16 +28,11 @@ body::before {
   inset: 0;
   z-index: -2;
   pointer-events: none;
-  /* Spotlight focado na IP. Como a composição é fixed/centralizada,
-     a IP fica em ~60% 50% do viewport em qualquer breakpoint, sem
-     precisar medir via JS. As CSS vars existem caso queiramos refinar
-     a posição/raio dinamicamente no futuro. */
   background:
-    radial-gradient(circle var(--spot-r, 220px) at var(--spot-x, 60%) var(--spot-y, 50%),
-      rgba(200, 220, 255, 0.45) 0%,
-      rgba(130, 160, 220, 0.18) 40%,
-      rgba(60, 90, 160, 0.05) 75%,
-      transparent 100%),
+    radial-gradient(ellipse 55% 40% at 50% 0%,
+      rgba(120, 150, 210, 0.45) 0%,
+      rgba(60, 90, 160, 0.18) 35%,
+      transparent 70%),
     radial-gradient(ellipse 90% 80% at 50% 50%,
       #16234a 0%,
       #0a1232 55%,
