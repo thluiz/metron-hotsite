@@ -245,27 +245,31 @@ body::after {
 /* ── Nav dots ─────────────────────────────────────── */
 #nav-dots {
   position: fixed;
-  right: 1.2rem;
-  top: 50%;
-  transform: translateY(-50%);
+  bottom: 2.2rem;
+  left: 50%;
+  transform: translateX(-50%);
   z-index: 100;
   display: flex;
-  flex-direction: column;
-  gap: 8px;
+  flex-direction: row;
+  gap: 14px;
 }
 #nav-dots a {
-  width: 8px;
-  height: 8px;
+  width: 10px;
+  height: 10px;
   border-radius: 50%;
-  background: rgba(255,255,255,0.35);
-  border: 1px solid rgba(255,255,255,0.5);
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.6);
   display: block;
-  transition: background 0.2s, transform 0.2s;
+  transition: background 0.25s, transform 0.25s, border-color 0.25s;
+  pointer-events: auto;
 }
-#nav-dots a.active,
+#nav-dots a.active {
+  background: rgba(255,255,255,0.95);
+  border-color: rgba(255,255,255,0.95);
+}
 #nav-dots a:hover {
-  background: rgba(255,255,255,0.9);
-  transform: scale(1.3);
+  transform: scale(1.25);
+  border-color: rgba(255,255,255,0.9);
 }
 
 /* ── Responsive font sizes ────────────────────────── */
