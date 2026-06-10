@@ -48,6 +48,19 @@ import '../styles/global.css';
     width: clamp(122px, 20vw, 300px);
     height: clamp(62px, 11vw, 160px);
   }
+  .ip-stage::before {
+    content: '';
+    position: absolute;
+    inset: -140% -80%;
+    background: radial-gradient(ellipse closest-side at 50% 50%,
+      rgba(2, 5, 14, 0.70) 0%,
+      rgba(5, 10, 28, 0.45) 35%,
+      rgba(10, 18, 50, 0.18) 65%,
+      transparent 100%);
+    filter: blur(12px);
+    z-index: -1;
+    pointer-events: none;
+  }
   .ip-logo {
     position: absolute;
     inset: 0;
