@@ -8,7 +8,7 @@ import '../styles/global.css';
     <img src="/images/metron-logo.png" alt="Metron Showrunners" class="metron-mark" />
     <span class="metron-bar"></span>
     <div class="ip-stage">
-      <img src="/images/hybris-logo.png" alt="Hybris" class="ip-logo" />
+      <img src="/images/hybris-logo.png" alt="Hybris" class="ip-logo ip-logo--hybris" />
       <img src="/images/laya-logo.png" alt="Laya" class="ip-logo" />
       <img src="/images/intersessoes-logo.png" alt="Intersessões" class="ip-logo" />
     </div>
@@ -66,6 +66,10 @@ import '../styles/global.css';
   }
   .ip-logo.active {
     opacity: 1;
+  }
+  .ip-logo--hybris {
+    transform: scale(1.35);
+    transform-origin: left center;
   }
 </style>
 
