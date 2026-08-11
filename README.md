@@ -1,68 +1,48 @@
 # metron-hotsite
 
-Hotsite estático da Metron Showrunners, publicado em
-[`metron.hybris.world`](https://metron.hybris.world) via Cloudflare Pages
-(projeto `metron-hotsite`).
+Hotsite da Metron Showrunners em
+[`metron.hybris.world`](https://metron.hybris.world), via Cloudflare Pages.
 
-Este é o repositório de **produção**. O conteúdo não se edita aqui: ele chega
-por Pull Request, promovido a partir do repositório de beta
+**Repositório de produção — o conteúdo não se edita aqui.** Ele chega por PR,
+promovido do beta
 ([`thluiz/metron-hotsite-beta`](https://github.com/thluiz/metron-hotsite-beta)
 → `metron-beta.hybris.world`).
 
+Regras de trabalho e armadilhas conhecidas: [`AGENTS.md`](AGENTS.md).
+
 ## O site
 
-Uma página só: a key art do Hybris ocupando a tela inteira, com `contain` para
-que o poster apareça inteiro em qualquer viewport, letterboxed no creme da
-própria arte.
-
-A barra creme do rodapé é um link para
+A key art do Hybris em tela cheia, com `contain` para o poster aparecer inteiro
+em qualquer viewport. A barra creme do rodapé linka
 [`files.hybris.world`](https://files.hybris.world) — o índice dos materiais da
-série, onde o acesso é por código. Esse índice vive noutro repositório
-([`thluiz/files-hybris-world`](https://github.com/thluiz/files-hybris-world)),
-com infraestrutura própria (R2 + D1).
+série, com acesso por código, hospedado em
+[`thluiz/files-hybris-world`](https://github.com/thluiz/files-hybris-world).
 
-Não há slides, scroll, navegação por teclado nem nav dots. Isso existiu até
-julho de 2026 e foi removido; se você encontrar código ou documentação falando
-disso, está desatualizado.
+Não há slides nem navegação por teclado. Isso existiu até julho de 2026;
+documentação que fale disso está velha.
 
-## Como o conteúdo chega aqui
+## Como o conteúdo chega
 
-1. Edita-se no repositório de beta e confere-se em `metron-beta.hybris.world`.
-2. Lá, **Actions → Promote to production → Run workflow**.
-3. Abre-se um PR neste repositório com o conteúdo do beta por cima.
-4. **O merge do PR é que dispara o deploy de produção.**
+No repo de beta: **Actions → Promote to production → Run workflow**. Abre um PR
+aqui, e **o merge dispara o deploy**.
 
-O promote copia tudo (`src/`, `public/`, configs, `AGENTS.md`, `CHANGELOG.md`)
-**exceto** `.github/` e este `README.md`, que são específicos de ambiente. Por
-isso este arquivo precisa ser mantido à mão — ele não vem no promote.
+O promote copia tudo exceto `.github/` e este `README.md` — por isso este
+arquivo se mantém à mão. Havendo PRs do Dependabot abertos, mergeie o de
+promote primeiro: os dois tocam o `package-lock.json`.
 
-Se houver PRs do Dependabot abertos, faça o merge do PR de promote **primeiro**:
-os dois tocam o `package-lock.json` e o promote precisaria ser regerado.
-
-## Trabalhando no código
-
-Leia o [`AGENTS.md`](AGENTS.md) — ele traz a estrutura, as boas práticas e as
-armadilhas conhecidas. Vale para os dois repositórios.
+## Rodar
 
 ```bash
 npm install
-npm run build     # SEMPRE antes de qualquer push
-npm run preview   # serve o dist/, igual à produção
-
-npm run preview            # num terminal
-npx playwright test        # noutro: 9 testes em iPhone 12/SE/14 Pro Max
+npm run build
+npm run preview        # num terminal
+npx playwright test    # noutro — 9 testes em iPhone 12/SE/14 Pro Max
 ```
 
-Os testes rodam em **WebKit**. Se aparecer `Executable doesn't exist`, rode
+Os testes usam WebKit. Se der `Executable doesn't exist`:
 `npx playwright install webkit`.
-
-## Stack
-
-- [Astro](https://astro.build/) 4, output estático
-- Cloudflare Pages (projeto `metron-hotsite`)
 
 ## Deploy
 
-Push na `main` dispara `.github/workflows/deploy.yml`, que builda o Astro e
-publica no Cloudflare Pages. Secrets necessários: `CLOUDFLARE_API_TOKEN` e
-`CLOUDFLARE_ACCOUNT_ID`.
+Push na `main` dispara `.github/workflows/deploy.yml`. Secrets:
+`CLOUDFLARE_API_TOKEN` e `CLOUDFLARE_ACCOUNT_ID`.
