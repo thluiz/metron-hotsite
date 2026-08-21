@@ -1,6 +1,6 @@
 # metron-hotsite
 
-Hotsite da Metron Showrunners em
+Hotsite da Metron Showrunners em [`hybris.world`](https://hybris.world) e
 [`metron.hybris.world`](https://metron.hybris.world), via Cloudflare Pages.
 
 **Repositório de produção — o conteúdo não se edita aqui.** Ele chega por PR,
@@ -46,3 +46,18 @@ Os testes usam WebKit. Se der `Executable doesn't exist`:
 
 Push na `main` dispara `.github/workflows/deploy.yml`. Secrets:
 `CLOUDFLARE_API_TOKEN` e `CLOUDFLARE_ACCOUNT_ID`.
+
+## Domínios
+
+Três hostnames servem este mesmo projeto (`metron-hotsite` no Cloudflare Pages):
+
+- `hybris.world` — canônico. `CNAME` para `metron-hotsite.pages.dev` no apex,
+  proxied; funciona por CNAME flattening, sem precisar de ALIAS.
+- `metron.hybris.world` — mesmo `CNAME`.
+- `www.hybris.world` — Redirect Rule 301 para o apex.
+
+**Armadilha:** o registro de DNS sozinho não basta. Todo hostname precisa estar
+também em **Workers & Pages → `metron-hotsite` → Custom domains**. Sem isso o
+Cloudflare responde **522**, porque o proxy não sabe que projeto serve aquele
+`Host:` — e o sintoma engana, já que o DNS aparenta estar certo. Foi o que
+travou a virada do apex em agosto de 2026.
