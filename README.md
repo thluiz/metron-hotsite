@@ -49,12 +49,16 @@ Push na `main` dispara `.github/workflows/deploy.yml`. Secrets:
 
 ## Domínios
 
-Três hostnames servem este mesmo projeto (`metron-hotsite` no Cloudflare Pages):
+Cinco hostnames servem este mesmo projeto (`metron-hotsite` no Cloudflare Pages):
 
 - `hybris.world` — canônico. `CNAME` para `metron-hotsite.pages.dev` no apex,
   proxied; funciona por CNAME flattening, sem precisar de ALIAS.
 - `metron.hybris.world` — mesmo `CNAME`.
 - `www.hybris.world` — Redirect Rule 301 para o apex.
+- `metronshowrunners.com` — domínio próprio, zone separada na mesma conta
+  Cloudflare. Mesmo esquema: `CNAME` para `metron-hotsite.pages.dev` no apex,
+  proxied.
+- `www.metronshowrunners.com` — Redirect Rule 301 para o apex.
 
 **Armadilha:** o registro de DNS sozinho não basta. Todo hostname precisa estar
 também em **Workers & Pages → `metron-hotsite` → Custom domains**. Sem isso o
