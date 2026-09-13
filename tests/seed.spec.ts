@@ -1,14 +1,42 @@
 import { expect, test } from '@playwright/test';
 
-/* Roda contra o dev server ou o preview (baseURL em playwright.config.ts),
-   nos três perfis de iPhone — ou seja, sempre em portrait. */
+/* Roda contra o PREVIEW (`npm run build && npm run preview`), nos três perfis
+   de iPhone — ou seja, sempre em portrait.
+
+   Contra o `astro dev` NÃO funciona, e falha de um jeito que engana: a
+   <astro-dev-toolbar> fica ancorada no rodé da viewport, exatamente sobre a
+   faixa que .footer-link ocupa (os últimos ~5% da arte). Ela intercepta o
+   clique; o Playwright tenta de novo até o autoplay trocar de slide, e aí a
+   mensagem vira "element is not visible", que aponta para o lugar errado.
+   O primeiro teste abaixo existe para dizer isso em um segundo. */
+
+test('a suíte está rodando contra o preview, não contra o dev', async ({
+  page,
+}) => {
+  await page.goto('/');
+
+  // A própria <astro-dev-toolbar> não serve de sinal aqui: ela é injetada por
+  // JS depois do load, e logo após o goto ainda não existe. O cliente do Vite
+  // vem no HTML desde o primeiro byte e só existe em dev.
+  const dev = await page
+    .locator('script[src*="@vite/client"], astro-dev-toolbar')
+    .count();
+
+  expect(
+    dev,
+    'Isto é o `astro dev`. A <astro-dev-toolbar> cobre a barra do rodapé e faz ' +
+      'os testes de clique falharem por motivo errado. Rode ' +
+      '`npm run build && npm run preview` antes da suíte.'
+  ).toBe(0);
+});
 
 /* Onde começa a barra marrom do rodapé na arte portrait da Hybris, medido por
    pixel: 2196 de 2311 (95.02%). Trocou a arte, meça de novo.
 
-   O Not Even Death desenha um botão "View Script", mas o destino ainda não
-   existe: em vez de link, ele leva a pastilha "Coming Soon" (ver mais abaixo).
-   Quando o destino subir, ele volta para esta lista. */
+   O Not Even Death tem a sua própria medida: a arte dele é outra (1313x2329),
+   e a barra começa em 2198, ou seja 94.38%. Até 2026-09-13 ele não estava
+   nesta lista, porque o destino não existia e havia no lugar uma pastilha
+   "Coming Soon". */
 const SLIDES_COM_LINK = [
   {
     nome: 'Hybris',
@@ -17,6 +45,23 @@ const SLIDES_COM_LINK = [
     href: 'https://files.hybris.world/',
     aria: /Hybris Project/,
     footerTopPct: 95.02,
+  },
+  {
+    nome: 'Laya',
+    dot: 1,
+    slide: 1,
+    href: 'https://youtu.be/bXL5xmmQPys',
+    aria: /Laya teaser/,
+    // A arte da Laya tem a barra em 94.44%, nao nos 95.02% da do Hybris.
+    footerTopPct: 94.44,
+  },
+  {
+    nome: 'Not Even Death',
+    dot: 4,
+    slide: 4,
+    href: 'https://files-ned.metronshowrunners.com/',
+    aria: /view the script/,
+    footerTopPct: 94.38,
   },
 ];
 
@@ -64,7 +109,7 @@ for (const ip of SLIDES_COM_LINK) {
   });
 }
 
-test('o dot da Laya troca o slide e some com o link do rodapé', async ({
+test('o dot da Laya troca o slide e esconde o link da Hybris', async ({
   page,
 }) => {
   await page.goto('/');
@@ -78,14 +123,23 @@ test('o dot da Laya troca o slide e some com o link do rodapé', async ({
     /Laya/
   );
 
-  // A Laya não tem botão pro projeto: sem .footer-link nesse slide.
-  await expect(layaSlide.locator('.footer-link')).toHaveCount(0);
-
-  // E o link da Hybris, agora escondido, não pode ficar clicável.
+  // O link da Hybris, agora escondido, não pode ficar clicável.
   await expect(page.locator('[data-slide="0"] .footer-link')).not.toBeVisible();
 });
 
-test('o Not Even Death avisa "Coming Soon" em vez de linkar para o vazio', async ({
+test('clicar na barra da Laya abre o teaser em vez de navegar', async ({
+  page,
+}) => {
+  await page.goto('/');
+  await page.locator('[data-dot="1"]').click();
+
+  await page.locator('[data-slide="1"] .footer-link').click();
+
+  await expect(page.locator('.glightbox-container')).toBeVisible();
+  await expect(page).toHaveURL('/');
+});
+
+test('o dot do Not Even Death abre o slide e o link vai para o files-ned', async ({
   page,
 }) => {
   await page.goto('/');
@@ -98,22 +152,19 @@ test('o Not Even Death avisa "Coming Soon" em vez de linkar para o vazio', async
     /Not Even Death/
   );
 
-  // Sem destino ainda: nenhum link nesse slide, em nenhum lugar da página.
-  await expect(nedSlide.locator('a')).toHaveCount(0);
-  await expect(page.locator('a[href*="files-ned"]')).toHaveCount(0);
+  // O alt dizia "Script coming soon" enquanto o destino não existia. Dizer
+  // isso agora seria mentira para quem usa leitor de tela.
+  await expect(nedSlide.locator('.keyart-img')).not.toHaveAttribute(
+    'alt',
+    /coming soon/i
+  );
 
-  const badge = nedSlide.locator('.soon-badge');
-  await expect(badge).toBeVisible();
-  await expect(badge).toHaveText(/coming soon/i);
-
-  // A pastilha cobre o botão desenhado, que fica na barra do rodapé: se ela
-  // subir para o meio da arte, é porque a medida saiu do lugar.
-  const box = await badge.boundingBox();
-  const art = await nedSlide.locator('.keyart-img').boundingBox();
-  expect(box && art).toBeTruthy();
-  const topPct = ((box!.y - art!.y) / art!.height) * 100;
-  expect(topPct).toBeGreaterThan(90);
-  expect(box!.y + box!.height).toBeLessThanOrEqual(art!.y + art!.height + 1);
+  // Exatamente um link no slide, e é o do files-ned.
+  await expect(nedSlide.locator('a')).toHaveCount(1);
+  await expect(nedSlide.locator('a')).toHaveAttribute(
+    'href',
+    'https://files-ned.metronshowrunners.com/'
+  );
 });
 
 test('as setas de navegação trocam de slide', async ({ page }) => {
