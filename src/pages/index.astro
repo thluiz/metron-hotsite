@@ -4,18 +4,224 @@ import '../styles/global.css';
 ---
 <Layout title="Hybris — An Ancient Conflict, Reimagined | Metron Showrunners">
 
+  <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/glightbox@3.3.1/dist/css/glightbox.min.css"
+  />
+  <script
+    is:inline
+    src="https://cdn.jsdelivr.net/npm/glightbox@3.3.1/dist/js/glightbox.min.js"
+  ></script>
+
   <main class="keyart-wrap">
-    <div class="keyart">
-      <img
-        src="/images/hybris-keyart.png?v=1"
-        alt="Hybris — An Ancient Conflict, Reimagined. A Metron Showrunners Original Epic Drama Series."
-        class="keyart-img"
-      />
-      <a
-        href="https://files.hybris.world/"
-        class="footer-link"
-        aria-label="Hybris Project — access the materials"
-      ></a>
+    <div
+      class="keyart"
+      role="region"
+      aria-roledescription="carousel"
+      aria-label="Metron Showrunners key art"
+    >
+      <div
+        class="slide is-active"
+        data-slide="0"
+        role="group"
+        aria-roledescription="slide"
+        aria-label="1 of 6: Hybris"
+      >
+        <picture>
+          <source
+            media="(orientation: portrait)"
+            srcset="/images/hybris-keyart-portrait.jpg?v=2"
+          />
+          <img
+            src="/images/hybris-keyart.jpg?v=2"
+            alt="Hybris — An Ancient Conflict, Reimagined. A Metron Showrunners Original Epic Drama Series."
+            class="keyart-img"
+          />
+        </picture>
+        <a
+          href="https://files.hybris.world/"
+          class="footer-link"
+          aria-label="Hybris Project — access the materials"
+        ></a>
+      </div>
+
+      <div
+        class="slide"
+        data-slide="1"
+        role="group"
+        aria-roledescription="slide"
+        aria-label="2 of 6: Laya"
+      >
+        <picture>
+          <source
+            media="(orientation: portrait)"
+            srcset="/images/laya-keyart-portrait.jpg?v=4"
+          />
+          <img
+            src="/images/laya-keyart.jpg?v=4"
+            alt="Laya — For love, she embraced eternity and relinquished her humanity. A Metron Showrunners Original Feature Film. Coming soon."
+            class="keyart-img"
+          />
+        </picture>
+        <a
+          href="https://youtu.be/bXL5xmmQPys"
+          class="footer-link glightbox is-laya"
+          aria-label="Play the Laya teaser"
+        ></a>
+      </div>
+
+      <div
+        class="slide"
+        data-slide="2"
+        role="group"
+        aria-roledescription="slide"
+        aria-label="3 of 6: Inter/Sessions"
+      >
+        <picture>
+          <source
+            media="(orientation: portrait)"
+            srcset="/images/intersessions-keyart-portrait.jpg?v=1"
+          />
+          <img
+            src="/images/intersessions-keyart.jpg?v=1"
+            alt="Inter/Sessions — No one stands alone. A Metron Showrunners Original Limited Series. Coming soon."
+            class="keyart-img"
+          />
+        </picture>
+      </div>
+
+      <div
+        class="slide"
+        data-slide="3"
+        role="group"
+        aria-roledescription="slide"
+        aria-label="4 of 6: Adorable Mrs. Steele"
+      >
+        <picture>
+          <source
+            media="(orientation: portrait)"
+            srcset="/images/mrs-steele-keyart-portrait.jpg?v=1"
+          />
+          <img
+            src="/images/mrs-steele-keyart.jpg?v=1"
+            alt="Adorable Mrs. Steele. A Metron Showrunners Original Comedy Feature Film. Coming soon."
+            class="keyart-img"
+          />
+        </picture>
+      </div>
+
+      <div
+        class="slide"
+        data-slide="4"
+        role="group"
+        aria-roledescription="slide"
+        aria-label="5 of 6: Not Even Death"
+      >
+        <picture>
+          <source
+            media="(orientation: portrait)"
+            srcset="/images/not-even-death-keyart-portrait.jpg?v=1"
+          />
+          <img
+            src="/images/not-even-death-keyart.jpg?v=1"
+            alt="Not Even Death — someone had to give up. A Metron Showrunners Original One-Minute Film."
+            class="keyart-img is-ned"
+          />
+        </picture>
+        <a
+          href="https://files-ned.metronshowrunners.com/"
+          class="footer-link is-ned"
+          aria-label="Not Even Death — view the script"
+        ></a>
+      </div>
+
+      <div
+        class="slide"
+        data-slide="5"
+        role="group"
+        aria-roledescription="slide"
+        aria-label="6 of 6: Cell Phone"
+      >
+        <picture>
+          <source
+            media="(orientation: portrait)"
+            srcset="/images/cell-phone-keyart-portrait.jpg?v=1"
+          />
+          <img
+            src="/images/cell-phone-keyart.jpg?v=1"
+            alt="Cell Phone — you're free to go. A Metron Showrunners Original Vertical Mobile Film. Coming soon."
+            class="keyart-img"
+          />
+        </picture>
+      </div>
+
+      <button
+        type="button"
+        class="nav-arrow prev"
+        data-nav="prev"
+        aria-label="Previous key art"
+      >
+        <span aria-hidden="true">&#8249;</span>
+      </button>
+      <button
+        type="button"
+        class="nav-arrow next"
+        data-nav="next"
+        aria-label="Next key art"
+      >
+        <span aria-hidden="true">&#8250;</span>
+      </button>
+
+      <div class="dots" role="tablist" aria-label="Choose key art">
+        <button
+          type="button"
+          class="dot is-active"
+          data-dot="0"
+          role="tab"
+          aria-selected="true"
+          aria-label="Show slide 1: Hybris"
+        ></button>
+        <button
+          type="button"
+          class="dot"
+          data-dot="1"
+          role="tab"
+          aria-selected="false"
+          aria-label="Show slide 2: Laya"
+        ></button>
+        <button
+          type="button"
+          class="dot"
+          data-dot="2"
+          role="tab"
+          aria-selected="false"
+          aria-label="Show slide 3: Inter/Sessions"
+        ></button>
+        <button
+          type="button"
+          class="dot"
+          data-dot="3"
+          role="tab"
+          aria-selected="false"
+          aria-label="Show slide 4: Adorable Mrs. Steele"
+        ></button>
+        <button
+          type="button"
+          class="dot"
+          data-dot="4"
+          role="tab"
+          aria-selected="false"
+          aria-label="Show slide 5: Not Even Death"
+        ></button>
+        <button
+          type="button"
+          class="dot"
+          data-dot="5"
+          role="tab"
+          aria-selected="false"
+          aria-label="Show slide 6: Cell Phone"
+        ></button>
+      </div>
     </div>
   </main>
 
@@ -30,14 +236,57 @@ import '../styles/global.css';
     background-color: #cabf9d;
   }
 
-  /* Caixa com o aspect da arte (1684x1190), inteira dentro do viewport. */
+  /* Caixa com o aspect da arte (3070x2304), inteira dentro do viewport. */
   .keyart {
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width:  min(100vw, 100vh * 1684 / 1190);
-    height: min(100vh, 100vw * 1190 / 1684);
+    width:  min(100vw, 100vh * 3070 / 2304);
+    height: min(100vh, 100vw * 2304 / 3070);
+    /* Altura da arte desenhada. Serve para dimensionar texto sobreposto sem
+       depender de vh puro, que erra quando a caixa é limitada pela largura. */
+    --art-h: min(100vh, 100vw * 2304 / 3070);
+  }
+
+  /* Portrait (celular): a arte portrait cobre a tela inteira (crop via
+     object-fit: cover), sem caixa com aspect fixo nem barras cor-de-creme.
+     Preenche o .keyart-wrap por inset (não por 100vw/100vh): unidades vh
+     em mobile seguem o "large viewport" (como se a barra do navegador
+     estivesse escondida), maior que a área realmente visível — com
+     top:50%/translate(-50%) isso sobrava simetricamente em cima E embaixo,
+     cortando a barra do rodapé mesmo com object-position: bottom. Herdar o
+     tamanho do wrap (que via position:fixed já acompanha o viewport visível
+     de verdade) evita o descompasso. */
+  @media (orientation: portrait) {
+    .keyart {
+      inset: 0;
+      top: auto;
+      left: auto;
+      transform: none;
+      width: 100%;
+      height: 100%;
+      /* Em portrait a arte é cortada por object-fit: cover, então o que
+         importa é o tamanho da IMAGEM desenhada, não o da caixa. */
+      --art-h: max(100vh, 100vw * 2329 / 1313);
+    }
+  }
+
+  /* Slides empilhados; o crossfade é só opacity. visibility some com um
+     delay pra não deixar o link do slide escondido focável/clicável. */
+  .slide {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.8s ease, visibility 0s linear 0.8s;
+    z-index: 1;
+  }
+  .slide.is-active {
+    opacity: 1;
+    visibility: visible;
+    transition: opacity 0.8s ease, visibility 0s linear 0s;
+    z-index: 2;
   }
 
   .keyart-img {
@@ -47,17 +296,79 @@ import '../styles/global.css';
     object-fit: fill; /* a caixa já tem o aspect certo */
   }
 
-  /* Faixa clicável sobre a barra creme do rodapé, que na arte começa em
-     y=1070 de 1190. Trocou a arte, meça de novo. */
+  @media (orientation: portrait) {
+    .keyart-img {
+      object-fit: cover; /* tela cheia, cropando bordas se preciso */
+      /* Ancorado embaixo: se algo for cortado por causa do aspect do
+         aparelho, corta o topo da arte, nunca a barra do rodapé. */
+      object-position: center bottom;
+    }
+
+    /* No Not Even Death o título encosta na borda direita da arte portrait.
+       Em aparelho mais alto que 1313x2329 (todo iPhone recente) o cover corta
+       ~18% da largura, e centralizado isso comia letras de "NOT EVEN DEATH".
+       Ancorado à direita, o corte cai no lado esquerdo — fundo escuro e a
+       ponta da mão. */
+    .keyart-img.is-ned {
+      object-position: right bottom;
+    }
+  }
+
+  /* Faixa clicável sobre a barra marrom do rodapé, medida por pixel na arte
+     landscape (3070x2304): começa em y=2085, ou seja 90.49% da altura.
+     Trocou a arte, meça de novo. Só Hybris ("Hybris Project") e Not Even Death
+     ("View Script") têm botão desenhado na barra — Laya, Inter/Sessions e Mrs.
+     Steele só dizem "Coming Soon", sem destino nem overlay clicável. */
   .footer-link {
     position: absolute;
     left: 0;
     right: 0;
-    top: 89.9%;
+    top: var(--footer-link-top, 90.49%);
     bottom: 0;
     z-index: 3;
     transition: background-color 0.2s ease;
   }
+
+  /* Medido por pixel na arte portrait (1311x2311): barra começa em y=2196,
+     ou seja 95.02% da altura. Trocou a arte, meça de novo. */
+  @media (orientation: portrait) {
+    .footer-link {
+      --footer-link-top: 95.02%;
+    }
+  }
+  /* A arte da Laya tem medida própria nas duas orientações. Landscape é
+     3074x2305 com a barra em y=2090 (90.67%); portrait é 1329x2351 com a
+     barra em y=2222 (94.51%). Os padrões — 90.49% e 95.02% — foram medidos
+     na arte do Hybris, e usá-los aqui deixa barra fora da área clicável.
+     Trocou a arte, meça de novo. */
+  .footer-link.is-laya {
+    --footer-link-top: 90.67%;
+  }
+
+  @media (orientation: portrait) {
+    .footer-link.is-laya {
+      --footer-link-top: 94.51%;
+    }
+  }
+
+  /* A arte do Not Even Death é 3094x2322 e a barra marrom começa em y=2104,
+     ou seja 90.65% da altura — não 90.49% como na do Hybris. Medido por
+     pixel; trocou a arte, meça de novo.
+
+     Até 2026-09-13 este bloco era uma pastilha "Coming Soon" cobrindo o botão
+     "View Script" desenhado na arte, porque o destino não existia e o link
+     seria morto. Existe agora. */
+  .footer-link.is-ned {
+    --footer-link-top: 90.65%;
+  }
+
+  /* Portrait (1313x2329): a barra começa em y=2198, 94.38% da altura. */
+  @media (orientation: portrait) {
+    .footer-link.is-ned {
+      --footer-link-top: 94.38%;
+    }
+  }
+
   .footer-link:hover {
     background-color: rgba(255, 255, 255, 0.14);
   }
@@ -65,4 +376,135 @@ import '../styles/global.css';
     outline: 2px solid rgba(26, 18, 10, 0.75); /* escuro: o fundo aqui é claro */
     outline-offset: -2px;
   }
+
+  /* Setas laterais, centralizadas na altura da arte (acima da barra do
+     rodapé, que fica só no terço inferior). */
+  .nav-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 4;
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    border: none;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.28);
+    color: #fff;
+    font-size: 22px;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+  }
+  .nav-arrow:hover {
+    background: rgba(0, 0, 0, 0.45);
+    transform: translateY(-50%) scale(1.08);
+  }
+  .nav-arrow:focus-visible {
+    outline: 2px solid rgba(255, 255, 255, 0.95);
+    outline-offset: 2px;
+  }
+  .nav-arrow.prev {
+    left: 3%;
+  }
+  .nav-arrow.next {
+    right: 3%;
+  }
+
+  /* Dots ficam acima da barra do rodapé (que começa perto de 90%), pra não
+     brigar com a faixa clicável. */
+  .dots {
+    position: absolute;
+    left: 50%;
+    bottom: 12%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 10px;
+    z-index: 4;
+  }
+
+  .dot {
+    width: 9px;
+    height: 9px;
+    padding: 0;
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, 0.85);
+    background: rgba(0, 0, 0, 0.25);
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+  }
+  .dot:hover {
+    transform: scale(1.15);
+  }
+  .dot.is-active {
+    background: rgba(255, 255, 255, 0.95);
+  }
+  .dot:focus-visible {
+    outline: 2px solid rgba(255, 255, 255, 0.95);
+    outline-offset: 2px;
+  }
 </style>
+
+<script>
+  const slides = Array.from(document.querySelectorAll<HTMLElement>('.slide'));
+  const dots = Array.from(document.querySelectorAll<HTMLButtonElement>('.dot'));
+  const prevButton = document.querySelector<HTMLButtonElement>('[data-nav="prev"]');
+  const nextButton = document.querySelector<HTMLButtonElement>('[data-nav="next"]');
+  const AUTOPLAY_MS = 6000;
+  const prefersReducedMotion = window.matchMedia(
+    '(prefers-reduced-motion: reduce)'
+  ).matches;
+
+  let current = 0;
+  let timer: ReturnType<typeof setInterval> | undefined;
+
+  function show(index: number) {
+    current = index;
+    slides.forEach((slide, i) =>
+      slide.classList.toggle('is-active', i === index)
+    );
+    dots.forEach((dot, i) => {
+      dot.classList.toggle('is-active', i === index);
+      dot.setAttribute('aria-selected', String(i === index));
+    });
+  }
+
+  function next() {
+    show((current + 1) % slides.length);
+  }
+
+  function prev() {
+    show((current - 1 + slides.length) % slides.length);
+  }
+
+  function restartAutoplay() {
+    if (prefersReducedMotion || slides.length < 2) return;
+    clearInterval(timer);
+    timer = setInterval(next, AUTOPLAY_MS);
+  }
+
+  dots.forEach((dot, i) => {
+    dot.addEventListener('click', () => {
+      show(i);
+      restartAutoplay();
+    });
+  });
+
+  prevButton?.addEventListener('click', () => {
+    prev();
+    restartAutoplay();
+  });
+
+  nextButton?.addEventListener('click', () => {
+    next();
+    restartAutoplay();
+  });
+
+  restartAutoplay();
+
+  // @ts-ignore — global from the GLightbox CDN <script>, no type declarations.
+  GLightbox({ selector: '.glightbox' });
+</script>
