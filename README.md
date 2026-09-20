@@ -1,67 +1,67 @@
 # metron-hotsite
 
-Hotsite da Metron Showrunners em [`hybris.world`](https://hybris.world) e
+Hotsite of Metron Showrunners at [`hybris.world`](https://hybris.world) and
 [`metron.hybris.world`](https://metron.hybris.world), via Cloudflare Pages.
 
-**Repositório de produção — o conteúdo não se edita aqui.** Ele chega por PR,
-promovido do beta
+**Production repository — content isn't edited here.** It arrives via PR,
+promoted from beta
 ([`thluiz/metron-hotsite-beta`](https://github.com/thluiz/metron-hotsite-beta)
 → `metron-beta.hybris.world`).
 
-Regras de trabalho e armadilhas conhecidas: [`AGENTS.md`](AGENTS.md).
+Working rules and known pitfalls: [`AGENTS.md`](AGENTS.md).
 
-## O site
+## The site
 
-A key art do Hybris em tela cheia, com `contain` para o poster aparecer inteiro
-em qualquer viewport. A barra creme do rodapé linka
-[`files.hybris.world`](https://files.hybris.world) — o índice dos materiais da
-série, com acesso por código, hospedado em
+The Hybris key art full-screen, with `contain` so the poster appears whole
+at any viewport. The cream footer bar links
+[`files.hybris.world`](https://files.hybris.world) — the index of the
+series' materials, with access-code gating, hosted at
 [`thluiz/files-hybris-world`](https://github.com/thluiz/files-hybris-world).
 
-Não há slides nem navegação por teclado. Isso existiu até julho de 2026;
-documentação que fale disso está velha.
+There are no slides or keyboard navigation. That existed until July 2026;
+documentation mentioning it is stale.
 
-## Como o conteúdo chega
+## How content gets here
 
-No repo de beta: **Actions → Promote to production → Run workflow**. Abre um PR
-aqui, e **o merge dispara o deploy**.
+In the beta repo: **Actions → Promote to production → Run workflow**. This
+opens a PR here, and **the merge triggers the deploy**.
 
-O promote copia tudo exceto `.github/` e este `README.md` — por isso este
-arquivo se mantém à mão. Havendo PRs do Dependabot abertos, mergeie o de
-promote primeiro: os dois tocam o `package-lock.json`.
+Promote copies everything except `.github/` and this `README.md` — that's
+why this file is maintained by hand. If there are open Dependabot PRs, merge
+the promote one first: both touch `package-lock.json`.
 
-## Rodar
+## Running
 
 ```bash
 npm install
 npm run build
-npm run preview        # num terminal
-npx playwright test    # noutro — 9 testes em iPhone 12/SE/14 Pro Max
+npm run preview        # in one terminal
+npx playwright test    # in another — 9 tests on iPhone 12/SE/14 Pro Max
 ```
 
-Os testes usam WebKit. Se der `Executable doesn't exist`:
+Tests use WebKit. If you get `Executable doesn't exist`:
 `npx playwright install webkit`.
 
 ## Deploy
 
-Push na `main` dispara `.github/workflows/deploy.yml`. Secrets:
-`CLOUDFLARE_API_TOKEN` e `CLOUDFLARE_ACCOUNT_ID`.
+Push to `main` triggers `.github/workflows/deploy.yml`. Secrets:
+`CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID`.
 
-## Domínios
+## Domains
 
-Cinco hostnames servem este mesmo projeto (`metron-hotsite` no Cloudflare Pages):
+Five hostnames serve this same project (`metron-hotsite` on Cloudflare Pages):
 
-- `hybris.world` — canônico. `CNAME` para `metron-hotsite.pages.dev` no apex,
-  proxied; funciona por CNAME flattening, sem precisar de ALIAS.
-- `metron.hybris.world` — mesmo `CNAME`.
-- `www.hybris.world` — Redirect Rule 301 para o apex.
-- `metronshowrunners.com` — domínio próprio, zone separada na mesma conta
-  Cloudflare. Mesmo esquema: `CNAME` para `metron-hotsite.pages.dev` no apex,
-  proxied.
-- `www.metronshowrunners.com` — Redirect Rule 301 para o apex.
+- `hybris.world` — canonical. `CNAME` to `metron-hotsite.pages.dev` on the
+  apex, proxied; works via CNAME flattening, no ALIAS needed.
+- `metron.hybris.world` — same `CNAME`.
+- `www.hybris.world` — 301 Redirect Rule to the apex.
+- `metronshowrunners.com` — separate own domain, separate zone on the same
+  Cloudflare account. Same scheme: `CNAME` to `metron-hotsite.pages.dev` on
+  the apex, proxied.
+- `www.metronshowrunners.com` — 301 Redirect Rule to the apex.
 
-**Armadilha:** o registro de DNS sozinho não basta. Todo hostname precisa estar
-também em **Workers & Pages → `metron-hotsite` → Custom domains**. Sem isso o
-Cloudflare responde **522**, porque o proxy não sabe que projeto serve aquele
-`Host:` — e o sintoma engana, já que o DNS aparenta estar certo. Foi o que
-travou a virada do apex em agosto de 2026.
+**Pitfall:** the DNS record alone isn't enough. Every hostname also needs to
+be listed under **Workers & Pages → `metron-hotsite` → Custom domains**.
+Without that, Cloudflare responds **522**, because the proxy doesn't know
+which project serves that `Host:` — and the symptom is misleading, since the
+DNS looks correct. That's what blocked the apex cutover in August 2026.
