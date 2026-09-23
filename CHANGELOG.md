@@ -2,6 +2,242 @@
 
 Notable changes by date, most recent first.
 
+The 2026-08-12 → 2026-09-20 entries were reconstructed from git history on
+2026-09-21, after the file had gone unmaintained for six weeks. They are
+grouped by commit date; anything not evident from the commits themselves was
+left out rather than guessed at.
+
+## 2026-09-23
+
+Three hero states landed today. This describes where it ended up; the two
+it passed through are kept in the `.keyart` comment so they don't get
+retried.
+
+### Changed
+- The hero is letterboxed, reverting the full-bleed experiment of
+  2026-09-21. The art box is the largest box of **the art's own aspect**
+  (3840x2007, 1.9133) that fits inside the viewport (`min()`, not
+  `max()`), centred, with `.keyart-wrap`'s background showing as bars:
+  left and right on a screen wider than the art, top and bottom on a
+  squarer one, including ~38px top and bottom on a 1080p 16:9 monitor.
+
+  Nothing is ever cropped, at any viewport: no title, no tagline, no
+  credit line. The thin bars on 16:9 are the price, chosen knowingly.
+
+  It went through a 16:9-capped box first, so a 16:9 screen would have no
+  bars at all. That trimmed a constant 3.54% off each side of the art,
+  which clipped the bottom-right credit line on five of the six pieces
+  ("Horror Feature Fil" on Laya; Inter/Sessions lost 2.26%, Mrs. Steele
+  1.98%). Rebalancing the trim couldn't fix it — saving the credits needed
+  ~5.8% off the left, cutting Mrs. Steele's title (starts 3.4% from the
+  edge) and Not Even Death's icons (3.6%) instead — so the crop was dropped
+  altogether.
+
+  Why full-bleed went: with art at 1.9133, covering a squarer screen
+  cropped the sides hard (15.2% per side at 4:3) and ordinary monitors were
+  eating the titles.
+
+  The button hotspot needs no conversion now that the box is the art: it
+  is x 46%–54%, y 2.5%–6.2% of the drawn art, inside the pill measured at
+  x 45.2%–54.8%, y 1.6%–7.0%.
+
+### Fixed
+- The nav arrows and the dots were positioned against the viewport, so the
+  moment letterbox bars existed they came off the artwork: at 21:9 the
+  arrows sat at 3% of 2560px, inside the left bar, and at 4:3 the dots
+  straddled the seam between art and bar. The hero's aspect now lives on
+  `.keyart` (the art box) instead of on `.slide`, and the slides simply
+  fill it — so every overlay inside, arrows and dots included, is measured
+  against the art. The aspect is now defined in exactly one place, not two.
+  Verified at 21:9, 16:9, 16:10, 4:3 and portrait: all four controls sit
+  inside the art, with percentages identical across viewports.
+
+### Removed
+- Not Even Death's right-edge anchoring in landscape (`.is-ned-slide`, and
+  the top-level `object-position: right`). It existed to push a side crop
+  away from the title; with no crop left in landscape it has nothing to do.
+  The portrait rule is untouched — that art still needs it.
+
+## 2026-09-21
+
+### Changed
+- New landscape key art for all six IPs, from 9211x4815 sources, served at
+  3840x2007 JPEG (every file came out smaller than the one it replaced;
+  `?v=6`). The portrait art was not touched.
+
+  The new pieces are **not 16:9**: 1.9133 against the old 1.7778. So the
+  slide box that makes the hero full-bleed had its aspect updated to match
+  — it has to equal the art exactly, or `object-fit: cover` starts cropping
+  inside the box as well and the button hotspot drifts off the drawn pill.
+
+  The CTA pill was remeasured with a percentage ruler over each of the six,
+  as `AGENTS.md` requires: it sits at x 45.2%–54.8%, y 1.6%–7.0% on all of
+  them — the same fixed-width pill, only the label differs. That is far
+  narrower than the previous art's pill (x 32%–68%), so the old hotspot
+  would have hung off the sides; it is now x 46%–54%, y 2.5%–6.2%, inset
+  inside the measured pill. Verified on screen at 21:9, 16:9 and 4:3: the
+  hotspot lands on the drawn pill at every width, including Not Even
+  Death's right-anchored box.
+
+  Being wider than 16:9, the art now loses its sides on ordinary monitors:
+  3.5% per side at 16:9, 8.2% at 16:10, 15.2% at 4:3. Measured margins say
+  what that costs — Mrs. Steele's title starts at 3.4% from the left, Laya's
+  logo at ~11%, and Not Even Death has content at both edges (icons from
+  3.6% left, the "H" in DEATH out to 99.3% right), which its right anchor
+  can no longer keep whole on both sides.
+- The hero art fills the viewport at every aspect ratio. The slide box is
+  no longer the largest 16:9 that *fits* inside the viewport (with a 1.45
+  aspect floor) but the smallest that *covers* it — `max()` instead of
+  `min()` — so it overflows and `.keyart-wrap`'s `overflow: hidden` does
+  the cropping. Asked for explicitly, with the cost accepted: wider than
+  16:9 crops the bottom of the art, squarer crops the sides (213px per side
+  at 4:3, which clips the start of the logo and the tagline). Documented in
+  the `.slide` comment so the fitted box doesn't come back by accident.
+- The clickable button's percentages are now relative to the drawn art
+  rather than to a box that drifted as the crop changed.
+- Not Even Death's right-edge anchoring moved from `object-position` up to
+  the box itself (`.is-ned-slide`), keeping the title that sits flush
+  against the right edge.
+- The books carousel is now a proper infinite scroll-snap carousel. The row
+  of covers is cloned once before and once after the real one, the scroll
+  rests in the middle copy, navigation is by index, and every scroll target
+  is read from the target cover's own `offsetLeft` — no arithmetic on cover
+  widths or gaps anywhere. Each click glides exactly one cover
+  (~290ms ease-out) and the loop never reaches an end to clamp against.
+  The clones are `aria-hidden` with untabbable links, so assistive tech and
+  the tab order still meet each book once; native touch swipe still works and
+  gets normalised back into the middle copy when it settles.
+  `prefers-reduced-motion` skips the animation.
+
+  This replaced three attempts that each looked broken, all recorded in the
+  code comment so they don't get retried:
+
+  1. `scrollBy(clientWidth)`. One "page" is 5.35 covers (1296px) while the
+     whole scrollable range is 354px — seven 190px covers in a 1296px
+     viewport barely overflow — so every click slammed into the clamp.
+  2. Rotating a cover through the DOM and correcting the scroll to hide it.
+     `scroll-snap-type: mandatory` drags any programmatic scroll to the
+     nearest snap point, and at the right-hand end the resting position is
+     the scroll clamp, which is not a snap point: a correction aimed at
+     112px landed on 246px, a 134px one-frame jump.
+  3. Cloning, but stepping by a measured pitch and folding on a pixel
+     threshold. The pitch is fractional at some widths (182.5px on a 390px
+     phone), so clicks drifted and snapping yanked them back (net steps of
+     -185, -183, -191 instead of -182), and the fold raced the animation
+     (+1021 then -53 where -242 was due).
+
+  Verified per click rather than by eye: the net scroll is exactly one cover
+  every time at both widths, the motion is a clean ease-out (max 50-75px per
+  frame), and the block fold is invisible by construction — child *i* and
+  child *i+7* are asserted to be the same cover, same image.
+
+### Removed
+- `--art-h`, which no rule consumed.
+
+## 2026-09-20
+
+### Fixed
+- The books carousel wraps around in both directions: past the last cover
+  it returns to the first, and back from the first to the last.
+
+## 2026-09-19
+
+### Added
+- `Metron Publishing` section below the hero: a horizontal carousel of book
+  covers, dark-themed across the whole page, with release-date captions,
+  drop shadows and a hover highlight.
+- Closing footer with the brand, the Laya trailer and links to the project
+  pages.
+
+### Changed
+- New key art for all six IPs, with the call-to-action button drawn at the
+  top of the art, replacing the cream footer stripe at the bottom. Portrait
+  art re-exported to match, and the button's hotspot remeasured for both
+  orientations.
+- Visible copy, the docs, the tests and the CI workflow all translated to
+  English.
+- Carousel autoplay pauses while the Laya trailer is open.
+
+## 2026-09-13
+
+### Added
+- The Laya teaser plays in a lightbox (glightbox) from the art's button,
+  instead of navigating away from the site.
+- Not Even Death's button leads to `files-ned.metronshowrunners.com`.
+
+### Changed
+- New Laya art, with the button position measured again against it.
+- `npm test` builds, starts the preview in the background and runs the
+  suite without hanging the shell.
+- The suite says within a second when it is pointed at `astro dev` instead
+  of the preview, where the dev toolbar makes click tests fail for the
+  wrong reason.
+
+### Fixed
+- The Laya video's centering in landscape on iOS.
+
+## 2026-09-08
+
+### Added
+- The *Promote to production* PR body now lists the commits being promoted.
+
+## 2026-09-07
+
+### Added
+- Cell Phone as the sixth carousel slide.
+
+## 2026-08-31
+
+### Changed
+- Not Even Death moved to the end of the carousel, announced as
+  "Coming Soon".
+
+## 2026-08-29
+
+### Added
+- Carousel expanded to four IPs.
+
+### Changed
+- Key art converted from PNG to JPEG.
+
+## 2026-08-28
+
+### Changed
+- Portrait art replaced by a high-resolution re-export.
+
+### Fixed
+- The footer bar being cropped in portrait on tall devices (S25 Ultra and
+  similar).
+
+## 2026-08-27
+
+### Added
+- Portrait art, with the carousel adjusted for mobile.
+
+### Changed
+- The portrait key art anchored to the bottom so the footer bar survives
+  the crop.
+
+## 2026-08-26
+
+### Added
+- The site became a carousel, starting with the Laya key art.
+- Navigation arrows alongside the dots.
+
+### Removed
+- Tailwind, incompatible with Astro 7 — which closes the debt recorded on
+  2026-08-11. `tailwind.config.mjs` is still in the tree, now orphaned.
+
+## 2026-08-21
+
+### Changed
+- The page declares its language as `en-US`.
+
+## 2026-08-12
+
+### Security
+- Dependabot bumps: `nanoid` 3.3.12 → 3.3.18, `postcss` 8.5.15 → 8.5.26.
+
 ## 2026-08-11
 
 ### Added
