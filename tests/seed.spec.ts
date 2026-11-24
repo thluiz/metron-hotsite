@@ -145,6 +145,39 @@ test('clicking the Laya bar opens the teaser instead of navigating', async ({
   await expect(page).toHaveURL('/');
 });
 
+test('the Laya slide has a visible View Project button next to the teaser one', async ({
+  page,
+}) => {
+  await page.goto('/');
+
+  const btn = page.locator('[data-slide="0"] .view-project');
+  await expect(btn).toBeVisible();
+  await expect(btn).toHaveText('View Project');
+  await expect(btn).toHaveAttribute(
+    'href',
+    'https://files-laya.metronshowrunners.com/'
+  );
+
+  // The teaser hotspot stays.
+  await expect(page.locator('[data-slide="0"] .footer-link')).toHaveCount(1);
+
+  // The baked "Watch Teaser" pill scales with the art, so this button has
+  // to as well (it once used a fixed font and drifted apart from it on
+  // resize). The tests run in portrait: the art covers the viewport at
+  // s = max(W/1600, H/2841) screen px per art px, and the baked pill is
+  // 512x142 art px at x 544 (see index.astro). The button is 356x114 art
+  // px, sits entirely on screen and ends left of the pill.
+  const box = await btn.boundingBox();
+  const vp = page.viewportSize()!;
+  expect(box).toBeTruthy();
+  const s = Math.max(vp.width / 1600, vp.height / 2841);
+  expect(Math.abs(box!.width - 356 * s)).toBeLessThan(1.5);
+  expect(Math.abs(box!.height - 114 * s)).toBeLessThan(1.5);
+  expect(box!.x).toBeGreaterThanOrEqual(0);
+  const pillLeft = vp.width / 2 - 0.16 * 1600 * s;
+  expect(box!.x + box!.width).toBeLessThanOrEqual(pillLeft);
+});
+
 test('the Not Even Death dot opens the slide and the link goes to files-ned', async ({
   page,
 }) => {
